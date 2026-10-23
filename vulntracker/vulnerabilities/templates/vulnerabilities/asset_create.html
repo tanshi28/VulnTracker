@@ -1,0 +1,109 @@
+{% extends 'vulnerabilities/base.html' %}
+
+{% block title %}Register Asset | VulnTracker{% endblock %}
+
+{% block content %}
+
+<section class="page-header">
+    <div>
+        <h1>REGISTER WEB ASSET</h1>
+        <p>Add a website that you own or are authorized to assess.</p>
+    </div>
+
+    <a href="{% url 'asset-list' %}" class="btn">
+        BACK TO ASSETS
+    </a>
+</section>
+
+<section class="panel form-panel">
+    <div class="section-heading">
+        <h2>ASSET CONFIGURATION</h2>
+    </div>
+
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="post" class="asset-form">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="name">ASSET NAME</label>
+
+            <input
+                type="text"
+                id="name"
+                name="name"
+                maxlength="100"
+                placeholder="e.g. My Portfolio Website"
+                value="{{ request.POST.name|default:'' }}"
+                required
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="url">WEBSITE URL</label>
+
+            <input
+                type="url"
+                id="url"
+                name="url"
+                maxlength="500"
+                placeholder="https://example.com"
+                value="{{ request.POST.url|default:'' }}"
+                required
+            >
+
+            <small>Enter a complete HTTP or HTTPS URL.</small>
+        </div>
+
+        <div class="form-group">
+            <label for="description">DESCRIPTION</label>
+
+            <textarea
+                id="description"
+                name="description"
+                rows="4"
+                placeholder="Describe the website or assessment scope."
+            >{{ request.POST.description|default:'' }}</textarea>
+        </div>
+
+        <div class="authorization-notice">
+            <h3>AUTHORIZATION REQUIRED</h3>
+
+            <p>
+                Only register websites that you own or have explicit
+                permission to assess. Registration does not itself authorize
+                automated scanning.
+            </p>
+
+            <label class="checkbox-label">
+                <input
+                    type="checkbox"
+                    name="authorization_confirmed"
+                    required
+                >
+
+                I confirm that I am authorized to assess this website.
+            </label>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn">
+                REGISTER ASSET
+            </button>
+
+            <a href="{% url 'asset-list' %}" class="btn btn-secondary">
+                CANCEL
+            </a>
+        </div>
+    </form>
+</section>
+
+{% endblock %}

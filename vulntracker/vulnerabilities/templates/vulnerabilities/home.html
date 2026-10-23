@@ -1,0 +1,76 @@
+{% extends 'vulnerabilities/base.html' %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-title">// THREAT INTELLIGENCE PORTAL</div>
+  <div class="page-sub">MONITORING VULNERABILITIES AND SECURITY FINDINGS</div>
+</div>
+
+<div class="stats-row">
+  <div class="stat-box red">
+    <div class="stat-num">{{ critical|length }}</div>
+    <div class="stat-label">CRITICAL</div>
+  </div>
+
+  <div class="stat-box orange">
+    <div class="stat-num">{{ open_count }}</div>
+    <div class="stat-label">OPEN</div>
+  </div>
+
+  <div class="stat-box green">
+    <div class="stat-num">{{ total_vulns }}</div>
+    <div class="stat-label">TOTAL CVEs</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">RECENT VULNERABILITIES</div>
+
+  {% for vuln in recent %}
+  <a href="{% url 'vuln-detail' vuln.slug %}" class="vuln-card">
+
+    <span class="sev-badge {% if vuln.severity == 'C' %}critical{% elif vuln.severity == 'H' %}high{% elif vuln.severity == 'M' %}medium{% elif vuln.severity == 'L' %}low{% endif %}">
+      {{ vuln.get_severity_display }}
+    </span>
+
+    <span class="vuln-cve">{{ vuln.cve_id }}</span>
+
+    <span class="vuln-title">{{ vuln.title }}</span>
+
+    <span class="vuln-system">{{ vuln.affected_system.name }}</span>
+
+    <span class="status-badge {% if vuln.status == 'O' %}open{% elif vuln.status == 'IP' %}in_progress{% elif vuln.status == 'P' %}patched{% endif %}">
+      {{ vuln.get_status_display }}
+    </span>
+
+  </a>
+  {% empty %}
+  <p class="empty">// NO VULNERABILITIES RECORDED</p>
+  {% endfor %}
+</div>
+
+<div class="section">
+  <div class="section-title">CRITICAL THREATS</div>
+
+  {% for vuln in critical %}
+  <a href="{% url 'vuln-detail' vuln.slug %}" class="vuln-card">
+
+    <span class="sev-badge critical">CRITICAL</span>
+
+    <span class="vuln-cve">{{ vuln.cve_id }}</span>
+
+    <span class="vuln-title">{{ vuln.title }}</span>
+
+    <span class="vuln-system">{{ vuln.affected_system.name }}</span>
+
+    <span class="status-badge {% if vuln.status == 'O' %}open{% elif vuln.status == 'IP' %}in_progress{% elif vuln.status == 'P' %}patched{% endif %}">
+      {{ vuln.get_status_display }}
+    </span>
+
+  </a>
+  {% empty %}
+  <p class="empty">// NO CRITICAL VULNERABILITIES FOUND</p>
+  {% endfor %}
+</div>
+{% endblock %}

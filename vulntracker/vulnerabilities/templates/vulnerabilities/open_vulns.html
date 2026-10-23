@@ -1,0 +1,33 @@
+{% extends 'vulnerabilities/base.html' %}
+{% block title %}Open Vulnerabilities{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-title">// OPEN VULNERABILITIES</div>
+  <div class="page-sub">{{ vulns|length }} UNPATCHED CVEs REQUIRING ATTENTION</div>
+</div>
+
+<div class="section">
+  <div class="section-title">UNPATCHED THREATS</div>
+
+  {% for vuln in vulns %}
+  <a href="{% url 'vuln-detail' vuln.slug %}" class="vuln-card">
+
+    <span class="sev-badge {% if vuln.severity == 'C' %}critical{% elif vuln.severity == 'H' %}high{% elif vuln.severity == 'M' %}medium{% elif vuln.severity == 'L' %}low{% endif %}">
+      {{ vuln.get_severity_display }}
+    </span>
+
+    <span class="vuln-cve">{{ vuln.cve_id }}</span>
+
+    <span class="vuln-title">{{ vuln.title }}</span>
+
+    <span class="vuln-system">{{ vuln.affected_system.name }}</span>
+
+    <span class="status-badge open">{{ vuln.get_status_display }}</span>
+
+  </a>
+  {% empty %}
+  <p class="empty">// ALL VULNERABILITIES PATCHED ✓</p>
+  {% endfor %}
+</div>
+{% endblock %}

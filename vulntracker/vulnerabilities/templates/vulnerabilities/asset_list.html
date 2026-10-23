@@ -1,0 +1,128 @@
+{% extends 'vulnerabilities/base.html' %}
+
+{% block title %}Web Assets | VulnTracker{% endblock %}
+
+{% block content %}
+
+<section class="page-header asset-page-header">
+    <div class="asset-header-content">
+        <h1>// WEB ASSETS</h1>
+        <p>Manage websites registered for authorized security assessments.</p>
+    </div>
+
+    <a href="{% url 'asset-create' %}" class="btn">
+        + REGISTER ASSET
+    </a>
+</section>
+
+<section class="stats-grid asset-stats-grid">
+    <div class="stat-card">
+        <span class="stat-label">TOTAL ASSETS</span>
+        <h2>{{ total_assets }}</h2>
+        <span class="stat-description">Registered targets</span>
+    </div>
+
+    <div class="stat-card">
+        <span class="stat-label">ACTIVE ASSETS</span>
+        <h2>{{ active_assets }}</h2>
+        <span class="stat-description">Currently active</span>
+    </div>
+
+    <div class="stat-card">
+        <span class="stat-label">AUTHORIZED ASSETS</span>
+        <h2>{{ authorized_assets }}</h2>
+        <span class="stat-description">Approved for assessment</span>
+    </div>
+</section>
+
+<section class="panel asset-panel">
+    <div class="section-heading">
+        <h2>REGISTERED TARGETS</h2>
+        <span>{{ total_assets }} ASSETS REGISTERED</span>
+    </div>
+
+    {% if assets %}
+        <div class="asset-list">
+            {% for asset in assets %}
+                <article class="asset-card">
+
+                    <div class="asset-info">
+                        <h3>{{ asset.name }}</h3>
+
+                        <p class="asset-url">{{ asset.url }}</p>
+
+                        {% if asset.description %}
+                            <p class="asset-description">
+                                {{ asset.description }}
+                            </p>
+                        {% endif %}
+
+                        <small class="asset-date">
+                            REGISTERED:
+                            {{ asset.created_at|date:"d M Y, H:i" }}
+                        </small>
+                    </div>
+
+                    <div class="asset-status">
+                        {% if asset.is_authorized %}
+                            <span class="status-badge patched">
+                                AUTHORIZED
+                            </span>
+                        {% else %}
+                            <span class="status-badge open">
+                                NOT AUTHORIZED
+                            </span>
+                        {% endif %}
+
+                        {% if asset.is_active %}
+                            <span class="status-badge in_progress">
+                                ACTIVE
+                            </span>
+                        {% else %}
+                            <span class="status-badge open">
+                                INACTIVE
+                            </span>
+                        {% endif %}
+
+                        {% if asset.is_active and asset.is_authorized %}
+                            <form
+                                method="post"
+                                action="{% url 'start-assessment' asset.id %}"
+                                class="asset-assessment-form"
+                            >
+                                {% csrf_token %}
+
+                                <button type="submit" class="btn">
+                                    &gt; START ASSESSMENT
+                                </button>
+                            </form>
+                        {% else %}
+                            <span class="stat-description">
+                                Assessment unavailable
+                            </span>
+                        {% endif %}
+                    </div>
+
+                </article>
+            {% endfor %}
+        </div>
+
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">&gt;_</div>
+
+            <h3>NO ASSETS REGISTERED</h3>
+
+            <p>
+                Your asset inventory is currently empty.
+                Register a website you own or have explicit permission to assess.
+            </p>
+
+            <a href="{% url 'asset-create' %}" class="btn">
+                + REGISTER YOUR FIRST ASSET
+            </a>
+        </div>
+    {% endif %}
+</section>
+
+{% endblock %}

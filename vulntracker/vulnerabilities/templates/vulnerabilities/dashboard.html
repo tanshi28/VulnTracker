@@ -1,0 +1,64 @@
+{% extends 'vulnerabilities/base.html' %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-title">// SECURITY DASHBOARD</div>
+  <div class="page-sub">REAL-TIME THREAT INTELLIGENCE OVERVIEW</div>
+</div>
+
+<div class="stats-row">
+  <div class="stat-box red">
+    <div class="stat-num">{{ critical_count }}</div>
+    <div class="stat-label">CRITICAL</div>
+  </div>
+  <div class="stat-box orange">
+    <div class="stat-num">{{ high_count }}</div>
+    <div class="stat-label">HIGH</div>
+  </div>
+  <div class="stat-box yellow">
+    <div class="stat-num">{{ medium_count }}</div>
+    <div class="stat-label">MEDIUM</div>
+  </div>
+  <div class="stat-box green">
+    <div class="stat-num">{{ low_count }}</div>
+    <div class="stat-label">LOW</div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">SYSTEM STATS</div>
+  <div class="detail-card">
+    <div class="detail-meta-row">
+      <span class="meta-label">TOTAL CVEs IN DATABASE</span>
+      <span class="meta-value">{{ total_vulns }}</span>
+    </div>
+    <div class="detail-meta-row">
+      <span class="meta-label">AFFECTED SYSTEMS MONITORED</span>
+      <span class="meta-value">{{ total_systems }}</span>
+    </div>
+    <div class="detail-meta-row">
+      <span class="meta-label">KNOWN THREAT ACTORS</span>
+      <span class="meta-value">{{ total_actors }}</span>
+    </div>
+    <div class="detail-meta-row">
+      <span class="meta-label">OPEN / UNPATCHED</span>
+      <span class="meta-value" style="color:#ff003c">{{ open_count }}</span>
+    </div>
+    <div class="detail-meta-row">
+      <span class="meta-label">PATCHED</span>
+      <span class="meta-value" style="color:#00ff41">{{ patched_count }}</span>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-title">QUICK FILTERS</div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap">
+    <a href="{% url 'by-severity' 'critical' %}" class="back-link" style="margin:0">CRITICAL CVEs</a>
+    <a href="{% url 'by-severity' 'high' %}" class="back-link" style="margin:0;border-color:#ff6600;color:#ff6600">HIGH CVEs</a>
+    <a href="{% url 'by-severity' 'medium' %}" class="back-link" style="margin:0;border-color:#ffd700;color:#ffd700">MEDIUM CVEs</a>
+    <a href="{% url 'open-vulns' %}" class="back-link" style="margin:0;border-color:#ff003c;color:#ff003c">OPEN THREATS</a>
+  </div>
+</div>
+{% endblock %}

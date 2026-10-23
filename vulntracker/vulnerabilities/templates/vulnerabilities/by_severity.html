@@ -1,0 +1,37 @@
+{% extends 'vulnerabilities/base.html' %}
+{% block title %}{{ level|upper }} Vulnerabilities{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-title">// SEVERITY: {{ level|upper }}</div>
+  <div class="page-sub">{{ vulns|length }} CVEs AT THIS SEVERITY LEVEL</div>
+</div>
+
+<a href="{% url 'vuln-list' %}" class="back-link">← BACK TO ALL CVEs</a>
+
+<div class="section">
+  <div class="section-title">{{ level|upper }} VULNERABILITIES</div>
+
+  {% for vuln in vulns %}
+  <a href="{% url 'vuln-detail' vuln.slug %}" class="vuln-card">
+
+    <span class="sev-badge {% if vuln.severity == 'C' %}critical{% elif vuln.severity == 'H' %}high{% elif vuln.severity == 'M' %}medium{% elif vuln.severity == 'L' %}low{% endif %}">
+      {{ vuln.get_severity_display }}
+    </span>
+
+    <span class="vuln-cve">{{ vuln.cve_id }}</span>
+
+    <span class="vuln-title">{{ vuln.title }}</span>
+
+    <span class="vuln-system">{{ vuln.affected_system.name }}</span>
+
+    <span class="status-badge {% if vuln.status == 'O' %}open{% elif vuln.status == 'IP' %}in_progress{% elif vuln.status == 'P' %}patched{% endif %}">
+      {{ vuln.get_status_display }}
+    </span>
+
+  </a>
+  {% empty %}
+  <p class="empty">// NO CVEs AT THIS SEVERITY LEVEL</p>
+  {% endfor %}
+</div>
+{% endblock %}

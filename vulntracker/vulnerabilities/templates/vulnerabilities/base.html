@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+          content="VulnTracker — Vulnerability Management and Security Assessment Platform">
+
+    <title>VulnTracker // {% block title %}Threat Intelligence{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'vulnerabilities/style.css' %}?v=20261023">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <div class="scan-line"></div>
+
+    <nav>
+        <a href="{% url 'home' %}" class="logo">
+            VULN<span>TRACKER</span>
+        </a>
+
+        <div class="nav-links">
+            <a href="{% url 'home' %}">HOME</a>
+            <a href="{% url 'vuln-list' %}">ALL CVEs</a>
+            <a href="{% url 'by-severity' 'critical' %}">CRITICAL</a>
+            <a href="{% url 'open-vulns' %}">OPEN</a>
+            <a href="{% url 'asset-list' %}">ASSETS</a>
+            <a href="{% url 'assessment-list' %}">ASSESSMENTS</a>
+            <a href="{% url 'dashboard' %}">DASHBOARD</a>
+        </div>
+    </nav>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <span>VULNTRACKER // SECURITY OPERATIONS</span>
+        <span class="blink">● SYSTEM ONLINE</span>
+    </footer>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+

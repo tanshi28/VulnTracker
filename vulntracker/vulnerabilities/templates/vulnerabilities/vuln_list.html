@@ -1,0 +1,81 @@
+{% extends 'vulnerabilities/base.html' %}
+
+{% block title %}All Vulnerabilities | VulnTracker{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <div class="page-title">// ALL VULNERABILITIES</div>
+        <div class="page-sub">{{ vulns|length }} VULNERABILITIES FOUND</div>
+    </div>
+</div>
+
+<div class="section">
+    <div class="section-title">SEARCH DATABASE</div>
+
+    <form method="get" class="filter-form">
+        <input
+            type="text"
+            name="q"
+            placeholder="Search CVE ID, title, or system..."
+            value="{{ search_query }}"
+            aria-label="Search vulnerabilities"
+        >
+
+        <select name="severity" aria-label="Filter by severity">
+            <option value="">ALL SEVERITIES</option>
+            <option value="C" {% if selected_severity == 'C' %}selected{% endif %}>CRITICAL</option>
+            <option value="H" {% if selected_severity == 'H' %}selected{% endif %}>HIGH</option>
+            <option value="M" {% if selected_severity == 'M' %}selected{% endif %}>MEDIUM</option>
+            <option value="L" {% if selected_severity == 'L' %}selected{% endif %}>LOW</option>
+        </select>
+
+        <select name="status" aria-label="Filter by status">
+            <option value="">ALL STATUSES</option>
+            <option value="O" {% if selected_status == 'O' %}selected{% endif %}>OPEN</option>
+            <option value="IP" {% if selected_status == 'IP' %}selected{% endif %}>IN PROGRESS</option>
+            <option value="P" {% if selected_status == 'P' %}selected{% endif %}>PATCHED</option>
+        </select>
+
+        <button type="submit" class="filter-button">SEARCH</button>
+
+        <a href="{% url 'vuln-list' %}" class="filter-button filter-reset">
+            RESET
+        </a>
+    </form>
+</div>
+
+<div class="section">
+    <div class="section-title">CVE DATABASE</div>
+
+    {% for vuln in vulns %}
+        <a href="{% url 'vuln-detail' vuln.slug %}" class="vuln-card">
+
+            <span class="sev-badge {% if vuln.severity == 'C' %}critical{% elif vuln.severity == 'H' %}high{% elif vuln.severity == 'M' %}medium{% elif vuln.severity == 'L' %}low{% endif %}">
+                {{ vuln.get_severity_display }}
+            </span>
+
+            <span class="vuln-cve">
+                {{ vuln.cve_id }}
+            </span>
+
+            <span class="vuln-title">
+                {{ vuln.title }}
+            </span>
+
+            <span class="vuln-system">
+                {{ vuln.affected_system.name }}
+            </span>
+
+            <span class="status-badge {% if vuln.status == 'O' %}open{% elif vuln.status == 'IP' %}in_progress{% elif vuln.status == 'P' %}patched{% endif %}">
+                {{ vuln.get_status_display }}
+            </span>
+
+        </a>
+    {% empty %}
+        <p class="empty">// NO VULNERABILITIES MATCH YOUR SEARCH</p>
+    {% endfor %}
+</div>
+
+{% endblock %}

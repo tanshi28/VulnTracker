@@ -1,0 +1,180 @@
+{% extends 'vulnerabilities/base.html' %}
+
+{% block title %}Assessments | VulnTracker{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h1>SECURITY ASSESSMENTS</h1>
+        <p>Monitor assessment activity and review security findings.</p>
+    </div>
+
+    <a href="{% url 'asset-list' %}" class="btn">
+        MANAGE ASSETS →
+    </a>
+
+</div>
+
+<!-- Assessment Statistics -->
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <span class="stat-label">TOTAL ASSESSMENTS</span>
+        <h2>{{ total_assessments }}</h2>
+        <span class="stat-description">All recorded assessment runs</span>
+    </div>
+
+    <div class="stat-card">
+        <span class="stat-label">COMPLETED</span>
+        <h2 class="severity-low">{{ completed_count }}</h2>
+        <span class="stat-description">Successfully completed</span>
+    </div>
+
+    <div class="stat-card">
+        <span class="stat-label">RUNNING</span>
+        <h2 class="severity-medium">{{ running_count }}</h2>
+        <span class="stat-description">Currently in progress</span>
+    </div>
+
+    <div class="stat-card">
+        <span class="stat-label">FAILED</span>
+        <h2 class="severity-critical">{{ failed_count }}</h2>
+        <span class="stat-description">Assessments requiring review</span>
+    </div>
+
+</div>
+
+<!-- Assessment History -->
+
+<div class="panel">
+    <div class="section-heading">
+        <h2>ASSESSMENT HISTORY</h2>
+        <span>{{ total_assessments }} RECORDS</span>
+    </div>
+
+    {% if assessments %}
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ASSESSMENT</th>
+                        <th>TARGET ASSET</th>
+                        <th>STATUS</th>
+                        <th>FINDINGS</th>
+                        <th>STARTED</th>
+                        <th>ACTION</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for assessment in assessments %}
+                        <tr>
+                            <td>
+                                <strong>#{{ assessment.id }}</strong>
+                            </td>
+
+                            <td>
+                                <div class="asset-info">
+                                    <strong>{{ assessment.asset.name }}</strong>
+                                    <span class="asset-url">
+                                        {{ assessment.asset.url }}
+                                    </span>
+                                </div>
+                            </td>
+
+                            <td>
+                                {% if assessment.status == 'COMPLETED' %}
+                                    <span class="status-badge patched">
+                                        COMPLETED
+                                    </span>
+                                {% elif assessment.status == 'RUNNING' %}
+                                    <span class="status-badge in_progress">
+                                        RUNNING
+                                    </span>
+                                {% elif assessment.status == 'FAILED' %}
+                                    <span class="status-badge open">
+                                        FAILED
+                                    </span>
+                                {% else %}
+                                    <span class="status-badge">
+                                        {{ assessment.status }}
+                                    </span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                <span class="finding-count">
+                                    {{ assessment.findings.count }}
+                                </span>
+                            </td>
+
+                            <td>
+                                {% if assessment.started_at %}
+                                    {{ assessment.started_at|date:"d M Y, H:i" }}
+                                {% else %}
+                                    <span class="muted">Not started</span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                <a
+                                    href="{% url 'assessment-detail' assessment.id %}"
+                                    class="action-link"
+                                >
+                                    VIEW →
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">⌁</div>
+            <h3>NO ASSESSMENTS FOUND</h3>
+            <p>
+                Your assessment history is empty. Register an authorized
+                web asset before preparing your first assessment.
+            </p>
+
+            <a href="{% url 'asset-list' %}" class="btn">
+                VIEW WEB ASSETS →
+            </a>
+        </div>
+    {% endif %}
+
+</div>
+
+<div class="panel assessment-note">
+    <div class="section-heading">
+        <h2>ASSESSMENT STATUS GUIDE</h2>
+    </div>
+
+    <div class="status-guide">
+        <div>
+            <span class="status-badge patched">COMPLETED</span>
+            <p>The assessment finished successfully.</p>
+        </div>
+
+        <div>
+            <span class="status-badge in_progress">RUNNING</span>
+            <p>The assessment is currently in progress.</p>
+        </div>
+
+        <div>
+            <span class="status-badge open">FAILED</span>
+            <p>The assessment encountered an error.</p>
+        </div>
+
+        <div>
+            <span class="status-badge">PENDING</span>
+            <p>The assessment has not started yet.</p>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

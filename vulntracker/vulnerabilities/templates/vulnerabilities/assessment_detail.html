@@ -1,0 +1,225 @@
+{% extends 'vulnerabilities/base.html' %}
+
+{% block title %}Assessment #{{ assessment.id }}{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <p class="eyebrow">// SECURITY ASSESSMENT</p>
+        <h1>ASSESSMENT <span class="highlight">#{{ assessment.id }}</span></h1>
+        <p class="page-description">
+            Review assessment results, security findings, and remediation guidance.
+        </p>
+    </div>
+
+    <a href="{% url 'assessment-list' %}" class="btn-secondary">
+        &larr; BACK TO ASSESSMENTS
+    </a>
+
+</div>
+
+<!-- Assessment Overview -->
+
+<section class="panel">
+    <div class="section-heading">
+        <h2>ASSESSMENT OVERVIEW</h2>
+        <span class="status-badge {{ assessment.status|lower }}">
+            {{ assessment.get_status_display|upper }}
+        </span>
+    </div>
+
+    <div class="assessment-overview">
+        <div class="overview-item">
+            <span class="label">TARGET NAME</span>
+            <strong>{{ assessment.asset.name }}</strong>
+        </div>
+
+        <div class="overview-item">
+            <span class="label">TARGET URL</span>
+            <a href="{{ assessment.asset.url }}"
+               target="_blank"
+               rel="noopener noreferrer">
+                {{ assessment.asset.url }}
+            </a>
+        </div>
+
+        <div class="overview-item">
+            <span class="label">CREATED</span>
+            <strong>{{ assessment.created_at|date:"M d, Y H:i" }}</strong>
+        </div>
+
+        <div class="overview-item">
+            <span class="label">STARTED</span>
+            <strong>
+                {% if assessment.started_at %}
+                    {{ assessment.started_at|date:"M d, Y H:i" }}
+                {% else %}
+                    Not started
+                {% endif %}
+            </strong>
+        </div>
+
+        <div class="overview-item">
+            <span class="label">COMPLETED</span>
+            <strong>
+                {% if assessment.completed_at %}
+                    {{ assessment.completed_at|date:"M d, Y H:i" }}
+                {% else %}
+                    Not completed
+                {% endif %}
+            </strong>
+        </div>
+
+        <div class="overview-item">
+            <span class="label">TOTAL FINDINGS</span>
+            <strong>{{ total_findings }}</strong>
+        </div>
+    </div>
+
+    {% if assessment.summary %}
+        <div class="assessment-summary">
+            <h3>ASSESSMENT SUMMARY</h3>
+            <p>{{ assessment.summary }}</p>
+        </div>
+    {% endif %}
+
+    {% if assessment.error_message %}
+        <div class="assessment-error">
+            <h3>ASSESSMENT ERROR</h3>
+            <p>{{ assessment.error_message }}</p>
+        </div>
+    {% endif %}
+
+</section>
+
+<!-- Severity Breakdown -->
+
+<section class="panel">
+    <div class="section-heading">
+        <h2>FINDINGS BY SEVERITY</h2>
+        <span>{{ total_findings }} TOTAL</span>
+    </div>
+
+    <div class="stats-grid five-col">
+        <div class="stat-card critical">
+            <span class="stat-label">CRITICAL</span>
+            <span class="stat-number">{{ severity_counts.CRITICAL }}</span>
+        </div>
+
+        <div class="stat-card high">
+            <span class="stat-label">HIGH</span>
+            <span class="stat-number">{{ severity_counts.HIGH }}</span>
+        </div>
+
+        <div class="stat-card medium">
+            <span class="stat-label">MEDIUM</span>
+            <span class="stat-number">{{ severity_counts.MEDIUM }}</span>
+        </div>
+
+        <div class="stat-card low">
+            <span class="stat-label">LOW</span>
+            <span class="stat-number">{{ severity_counts.LOW }}</span>
+        </div>
+
+        <div class="stat-card info">
+            <span class="stat-label">INFORMATIONAL</span>
+            <span class="stat-number">{{ severity_counts.INFO }}</span>
+        </div>
+    </div>
+
+</section>
+
+<!-- Security Findings -->
+
+<section class="panel">
+    <div class="section-heading">
+        <h2>SECURITY FINDINGS</h2>
+        <span>{{ total_findings }} RECORDS</span>
+    </div>
+
+    {% if findings %}
+        <div class="findings-list">
+            {% for finding in findings %}
+                <article class="finding-card">
+
+                    <div class="finding-header">
+                        <div>
+                            <span class="severity-badge {{ finding.severity|lower }}">
+                                {{ finding.get_severity_display|upper }}
+                            </span>
+
+                            <h3>{{ finding.title }}</h3>
+                            <p class="finding-category">
+                                CATEGORY: {{ finding.category }}
+                            </p>
+                        </div>
+
+                        <span class="status-badge {{ finding.status|lower }}">
+                            {{ finding.get_status_display|upper }}
+                        </span>
+                    </div>
+
+                    <div class="finding-body">
+                        <div class="finding-section">
+                            <h4>DESCRIPTION</h4>
+                            <p>{{ finding.description }}</p>
+                        </div>
+
+                        {% if finding.evidence %}
+                            <div class="finding-section">
+                                <h4>EVIDENCE</h4>
+                                <pre class="evidence-block">{{ finding.evidence }}</pre>
+                            </div>
+                        {% endif %}
+
+                        {% if finding.remediation %}
+                            <div class="finding-section">
+                                <h4>REMEDIATION</h4>
+                                <p>{{ finding.remediation }}</p>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="finding-footer">
+                        <span>
+                            FIRST SEEN:
+                            {{ finding.first_seen|date:"M d, Y H:i" }}
+                        </span>
+
+                        <span>
+                            LAST UPDATED:
+                            {{ finding.last_updated|date:"M d, Y H:i" }}
+                        </span>
+                    </div>
+
+                </article>
+            {% endfor %}
+        </div>
+
+    {% else %}
+        <div class="empty-state">
+            <h3>NO FINDINGS RECORDED</h3>
+
+            {% if assessment.status == 'COMPLETED' %}
+                <p>
+                    This assessment completed without recording any findings.
+                    This does not guarantee that the target is free of vulnerabilities.
+                </p>
+            {% elif assessment.status == 'FAILED' %}
+                <p>
+                    The assessment failed before findings could be reviewed.
+                    Check the assessment error above.
+                </p>
+            {% else %}
+                <p>
+                    No findings are available yet. Check back after the assessment
+                    has completed.
+                </p>
+            {% endif %}
+        </div>
+    {% endif %}
+
+</section>
+
+{% endblock %}

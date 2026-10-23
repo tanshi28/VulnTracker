@@ -1,0 +1,2004 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;500;700&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background: #0a0a0f;
+    color: #00ff41;
+    font-family: 'Share Tech Mono', monospace;
+    min-height: 100vh;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0a0a0f; }
+::-webkit-scrollbar-thumb { background: #00ff41; }
+
+/* ── Scan line animation ── */
+.scan-line {
+    position: fixed; top: 0; left: 0; right: 0;
+    height: 2px; background: rgba(0,255,65,0.15);
+    animation: scan 5s linear infinite;
+    pointer-events: none; z-index: 9999;
+}
+@keyframes scan { 0% { top: 0; } 100% { top: 100vh; } }
+
+/* ── Nav ── */
+nav {
+    background: #0d0d1a;
+    border-bottom: 1px solid #00ff41;
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    position: sticky; top: 0; z-index: 100;
+}
+.logo {
+    font-family: 'Orbitron', monospace;
+    font-size: 18px;
+    color: #00ff41;
+    letter-spacing: 0.15em;
+    text-shadow: 0 0 10px #00ff41;
+    text-decoration: none;
+}
+.logo span { color: #ff003c; }
+.nav-links { display: flex; flex-wrap: wrap; gap: 6px; }
+.nav-links a {
+    color: #00ff41;
+    text-decoration: none;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    padding: 5px 12px;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+}
+.nav-links a:hover {
+    border-color: #00ff41;
+    background: rgba(0,255,65,0.05);
+    text-shadow: 0 0 8px #00ff41;
+}
+
+/* ── Page header ── */
+/*
+ * Single unified .page-header that works for every page:
+ * - Old-style pages (home, dashboard, severity, open, system, actor)
+ *   put a .page-title div + .page-sub div directly inside.
+ * - New-style pages (assessment, asset) put an h1 + p inside a child div,
+ *   and a .btn sibling next to it.  flex layout handles the split.
+ */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 28px 32px 20px;
+    border-bottom: 1px solid #1a1a2e;
+}
+
+/* Old-style heading elements (div.page-title / div.page-sub) */
+.page-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 20px;
+    color: #00ff41;
+    text-shadow: 0 0 15px #00ff41;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+}
+.page-sub {
+    font-size: 11px;
+    color: #006621;
+    letter-spacing: 0.15em;
+}
+
+/* New-style heading elements (h1 / p inside .page-header > div) */
+.page-header h1 {
+    margin: 0 0 8px;
+    color: #00ff41;
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(18px, 3vw, 28px);
+    letter-spacing: 2px;
+    text-shadow: 0 0 12px rgba(0, 255, 65, 0.25);
+}
+.page-header > div > p,
+.page-header p.page-description,
+.page-header p.eyebrow {
+    margin: 0;
+    color: #00ff41;
+    font-size: 13px;
+}
+
+/* ── Stats row (home / dashboard) ── */
+.stats-row {
+    display: flex;
+    gap: 12px;
+    padding: 16px 32px;
+    border-bottom: 1px solid #1a1a2e;
+    flex-wrap: wrap;
+}
+.stat-box {
+    flex: 1;
+    min-width: 120px;
+    border: 1px solid;
+    padding: 12px 16px;
+    position: relative;
+    overflow: hidden;
+}
+.stat-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+}
+.stat-box.red    { border-color: #ff003c; }
+.stat-box.red::before    { background: #ff003c; box-shadow: 0 0 8px #ff003c; }
+.stat-box.orange { border-color: #ff6600; }
+.stat-box.orange::before { background: #ff6600; box-shadow: 0 0 8px #ff6600; }
+.stat-box.yellow { border-color: #ffd700; }
+.stat-box.yellow::before { background: #ffd700; box-shadow: 0 0 8px #ffd700; }
+.stat-box.green  { border-color: #00ff41; }
+.stat-box.green::before  { background: #00ff41; box-shadow: 0 0 8px #00ff41; }
+.stat-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 26px;
+    font-weight: 700;
+}
+.stat-box.red    .stat-num { color: #ff003c; text-shadow: 0 0 10px #ff003c; }
+.stat-box.orange .stat-num { color: #ff6600; text-shadow: 0 0 10px #ff6600; }
+.stat-box.yellow .stat-num { color: #ffd700; text-shadow: 0 0 10px #ffd700; }
+.stat-box.green  .stat-num { color: #00ff41; text-shadow: 0 0 10px #00ff41; }
+.stat-label { font-size: 10px; color: #666; letter-spacing: 0.1em; margin-top: 3px; }
+
+/* ── Section ── */
+.section { padding: 20px 32px; }
+.section-title {
+    font-family: 'Orbitron', monospace;
+    font-size: 11px;
+    color: #00ff41;
+    letter-spacing: 0.2em;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, #00ff41, transparent);
+}
+
+/* Keep the CVE list above the next section's border */
+.section + .section { padding-top: 12px; }
+
+/* ── Vuln cards ── */
+.vuln-card {
+    border: 1px solid #1a2a1a;
+    background: #0d0d1a;
+    padding: 13px 18px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+    transition: all 0.2s;
+    text-decoration: none;
+    min-width: 0;
+}
+.vuln-card:hover {
+    border-color: #00ff41;
+    background: rgba(0,255,65,0.03);
+    transform: translateX(4px);
+}
+.vuln-cve {
+    font-size: 12px;
+    color: #00ff41;
+    min-width: 150px;
+    text-shadow: 0 0 6px rgba(0,255,65,0.5);
+}
+.vuln-title {
+    font-size: 13px;
+    color: #c0c0c0;
+    flex: 1;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+.vuln-system {
+    font-size: 10px;
+    color: #555;
+    letter-spacing: 0.05em;
+    min-width: 80px;
+}
+
+/* ── Severity badges ── */
+.sev-badge {
+    display: inline-block;
+    font-size: 9px;
+    padding: 3px 10px;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+    border: 1px solid;
+    white-space: nowrap;
+    font-family: 'Orbitron', monospace;
+}
+.sev-badge.critical { color: #ff003c; border-color: #ff003c; background: rgba(255,0,60,0.1); }
+.sev-badge.high     { color: #ff6600; border-color: #ff6600; background: rgba(255,102,0,0.1); }
+.sev-badge.medium   { color: #ffd700; border-color: #ffd700; background: rgba(255,215,0,0.1); }
+.sev-badge.low      { color: #00ff41; border-color: #00ff41; background: rgba(0,255,65,0.1); }
+
+/* ── Status badges ── */
+.status-badge {
+    display: inline-block;
+    padding: 5px 9px;
+    border: 1px solid #555566;
+    color: #b0b0c0;
+    font-size: 10px;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    font-family: 'Share Tech Mono', monospace;
+}
+.status-badge.open        { border-color: #ff003c; color: #ff003c; }
+.status-badge.patched     { border-color: #00ff41; color: #00ff41; }
+.status-badge.in_progress { border-color: #ffd700; color: #ffd700; }
+/* assessment status variants */
+.status-badge.completed   { border-color: #00ff41; color: #00ff41; }
+.status-badge.running     { border-color: #ffd700; color: #ffd700; }
+.status-badge.failed      { border-color: #ff003c; color: #ff003c; }
+.status-badge.pending     { border-color: #555566; color: #b0b0c0; }
+
+/* ── Severity badges (assessment findings) ── */
+.severity-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border: 1px solid;
+    font-size: 10px;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    font-family: 'Share Tech Mono', monospace;
+}
+.severity-badge.critical { border-color: #ff003c; color: #ff003c; background: rgba(255,0,60,0.1); }
+.severity-badge.high     { border-color: #ff6600; color: #ff6600; background: rgba(255,102,0,0.1); }
+.severity-badge.medium   { border-color: #ffd700; color: #ffd700; background: rgba(255,215,0,0.1); }
+.severity-badge.low      { border-color: #00ff41; color: #00ff41; background: rgba(0,255,65,0.1); }
+.severity-badge.info     { border-color: #555566; color: #b0b0c0; }
+
+/* ── Detail page ── */
+.detail-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+    padding: 20px 32px;
+}
+.detail-card {
+    border: 1px solid #1a2a1a;
+    background: #0d0d1a;
+    padding: 20px 22px;
+}
+.detail-card h3 {
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    color: #006621;
+    letter-spacing: 0.2em;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #1a2a1a;
+}
+.detail-card p {
+    font-size: 13px;
+    color: #a0a0a0;
+    line-height: 1.8;
+}
+.detail-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid #111;
+    font-size: 12px;
+}
+.detail-meta-row:last-child { border-bottom: none; }
+.meta-label { color: #555; letter-spacing: 0.05em; }
+.meta-value { color: #00ff41; text-decoration: none; }
+a.meta-value:hover { text-shadow: 0 0 6px #00ff41; }
+
+/* ── Back link ── */
+.back-link {
+    display: inline-block;
+    color: #00ff41;
+    text-decoration: none;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    padding: 6px 14px;
+    border: 1px solid #006621;
+    margin: 0 32px 20px;
+    transition: all 0.2s;
+}
+.back-link:hover { border-color: #00ff41; background: rgba(0,255,65,0.05); }
+
+/* ── Footer ── */
+footer {
+    border-top: 1px solid #1a1a2e;
+    padding: 16px 32px;
+    font-size: 10px;
+    color: #333;
+    letter-spacing: 0.1em;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 40px;
+}
+
+/* ── Blink ── */
+.blink { animation: blink 1s step-end infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* ── Empty state (simple) ── */
+.empty { color: #333; font-size: 13px; padding: 20px 0; letter-spacing: 0.05em; }
+
+/* ── CVE search form ── */
+.filter-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+    width: 100%;
+}
+.filter-form input,
+.filter-form select {
+    background: #0d0d1a;
+    color: #00ff41;
+    border: 1px solid #00ff41;
+    padding: 10px 12px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    outline: none;
+    min-height: 40px;
+    border-radius: 0;
+}
+.filter-form input {
+    flex: 1 1 260px;
+    min-width: 0;
+}
+.filter-form select {
+    flex: 0 1 auto;
+    min-width: 145px;
+    max-width: 100%;
+    cursor: pointer;
+}
+.filter-form input:focus,
+.filter-form select:focus {
+    box-shadow: 0 0 8px rgba(0, 255, 65, 0.25);
+}
+.filter-form option {
+    background: #0a0a0f;
+    color: #00ff41;
+}
+.filter-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 40px;
+    padding: 10px 18px;
+    background: transparent;
+    color: #00ff41;
+    border: 1px solid #00ff41;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    cursor: pointer;
+    transition: 0.2s;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.filter-button:hover {
+    background: #00ff41;
+    color: #0a0a0f;
+}
+.filter-reset {
+    border-color: #006621;
+    color: #00ff41;
+}
+.filter-reset:hover {
+    border-color: #00ff41;
+    background: rgba(0, 255, 65, 0.05);
+    color: #00ff41;
+}
+
+/* ==========================================
+   VULNTRACKER — BUTTONS
+   ========================================== */
+
+.btn {
+    display: inline-block;
+    padding: 12px 18px;
+    border: 1px solid #00ff41;
+    background: transparent;
+    color: #00ff41;
+    text-decoration: none;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    transition: 0.2s ease;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.btn:hover {
+    background: #00ff41;
+    color: #08080d;
+    box-shadow: 0 0 14px rgba(0, 255, 65, 0.3);
+}
+.btn-secondary {
+    display: inline-block;
+    padding: 10px 16px;
+    border: 1px solid #006621;
+    background: transparent;
+    color: #00ff41;
+    text-decoration: none;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 1px;
+    transition: 0.2s ease;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.btn-secondary:hover {
+    border-color: #00ff41;
+    background: rgba(0, 255, 65, 0.06);
+}
+
+/* ==========================================
+   VULNTRACKER — ASSESSMENT + ASSET PAGES
+   ========================================== */
+
+/* Statistics grid (4-column default) */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 14px;
+    padding: 24px 28px;
+}
+
+/* 5-column variant for assessment findings breakdown */
+.stats-grid.five-col {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.stat-card {
+    min-width: 0;
+    padding: 22px;
+    border: 1px solid #252536;
+    background: #0d0d17;
+}
+.stat-card .stat-label {
+    display: block;
+    color: #77778a;
+    font-size: 11px;
+    letter-spacing: 2px;
+}
+.stat-card h2 {
+    margin: 12px 0 8px;
+    font-size: 32px;
+    color: #00ff41;
+}
+.stat-description {
+    display: block;
+    color: #77778a;
+    font-size: 12px;
+}
+.stat-card .stat-number {
+    display: block;
+    font-family: 'Orbitron', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    margin: 10px 0 0;
+    color: #00ff41;
+}
+.stat-card.critical .stat-number { color: #ff003c; text-shadow: 0 0 8px rgba(255,0,60,0.4); }
+.stat-card.high     .stat-number { color: #ff6600; text-shadow: 0 0 8px rgba(255,102,0,0.4); }
+.stat-card.medium   .stat-number { color: #ffd700; text-shadow: 0 0 8px rgba(255,215,0,0.4); }
+.stat-card.low      .stat-number { color: #00ff41; text-shadow: 0 0 8px rgba(0,255,65,0.4); }
+.stat-card.info     .stat-number { color: #77778a; }
+
+.severity-low      { color: #00ff41; }
+.severity-medium   { color: #ff9100; }
+.severity-critical { color: #ff003c; }
+
+/* Main panels */
+.panel {
+    margin: 12px 28px 28px;
+    padding: 22px;
+    border: 1px solid #222232;
+    background: #0b0b13;
+    min-width: 0;
+}
+.section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #00ff41;
+}
+.section-heading h2 {
+    margin: 0;
+    color: #00ff41;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 15px;
+    letter-spacing: 2px;
+}
+.section-heading > span {
+    color: #88889a;
+    font-size: 11px;
+}
+
+/* Assessment table */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+.data-table th {
+    padding: 14px 12px;
+    color: #77778a;
+    font-size: 11px;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #252536;
+    white-space: nowrap;
+}
+.data-table td {
+    padding: 16px 12px;
+    border-bottom: 1px solid #20202c;
+    color: #c7c7d5;
+    font-size: 13px;
+    vertical-align: middle;
+}
+.data-table tbody tr:hover { background: #11111d; }
+
+.asset-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 140px;
+}
+.asset-info strong { color: #e5e5f0; }
+.asset-url {
+    max-width: 260px;
+    overflow-wrap: anywhere;
+    color: #77778a;
+    font-size: 11px;
+}
+.finding-count { color: #00ff41; font-weight: bold; }
+.muted { color: #77778a; }
+.action-link {
+    color: #00ff41;
+    text-decoration: none;
+    white-space: nowrap;
+    font-size: 12px;
+}
+.action-link:hover { text-shadow: 0 0 8px #00ff41; }
+
+/* Empty state */
+.empty-state {
+    padding: 40px 20px;
+    text-align: center;
+    border: 1px dashed #29293b;
+}
+.empty-icon {
+    margin-bottom: 12px;
+    color: #00ff41;
+    font-size: 36px;
+}
+.empty-state h3 {
+    color: #00ff41;
+    font-size: 17px;
+    letter-spacing: 2px;
+}
+.empty-state p {
+    margin: 12px auto 22px;
+    max-width: 600px;
+    color: #9999aa;
+    line-height: 1.7;
+}
+
+/* Status guide */
+.assessment-note { margin-bottom: 35px; }
+.status-guide {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+}
+.status-guide p {
+    margin: 9px 0 0;
+    color: #9999aa;
+    font-size: 12px;
+}
+
+/* Assessment detail */
+.assessment-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0;
+}
+.overview-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 14px 0;
+    border-bottom: 1px solid #1a1a2e;
+}
+.overview-item:last-child { border-bottom: none; }
+.overview-item .label {
+    font-size: 10px;
+    color: #77778a;
+    letter-spacing: 1px;
+}
+.overview-item strong,
+.overview-item a {
+    font-size: 13px;
+    color: #e5e5f0;
+    text-decoration: none;
+    word-break: break-all;
+}
+.overview-item a:hover { color: #00ff41; }
+
+.assessment-summary,
+.assessment-error {
+    margin-top: 20px;
+    padding: 16px;
+    border: 1px solid #1a2a1a;
+}
+.assessment-summary h3,
+.assessment-error h3 {
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+.assessment-summary h3 { color: #006621; }
+.assessment-error h3  { color: #ff003c; }
+.assessment-summary p { font-size: 13px; color: #a0a0a0; line-height: 1.7; }
+.assessment-error p   { font-size: 13px; color: #ff6666; line-height: 1.7; }
+
+/* Finding cards */
+.findings-list { display: grid; gap: 16px; }
+.finding-card {
+    border: 1px solid #1a2a1a;
+    background: #0a0a0f;
+}
+.finding-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px 18px 12px;
+    border-bottom: 1px solid #1a2a1a;
+}
+.finding-header h3 {
+    margin: 8px 0 4px;
+    color: #e5e5f0;
+    font-size: 14px;
+    letter-spacing: 0.05em;
+}
+.finding-category {
+    font-size: 10px;
+    color: #77778a;
+    letter-spacing: 1px;
+}
+.finding-body { padding: 16px 18px; }
+.finding-section { margin-bottom: 16px; }
+.finding-section:last-child { margin-bottom: 0; }
+.finding-section h4 {
+    font-family: 'Orbitron', monospace;
+    font-size: 9px;
+    color: #006621;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+}
+.finding-section p {
+    font-size: 13px;
+    color: #a0a0a0;
+    line-height: 1.7;
+}
+.evidence-block {
+    background: #0d0d17;
+    border: 1px solid #1a2a1a;
+    padding: 12px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    color: #c0c0c0;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+.finding-footer {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 10px 18px;
+    border-top: 1px solid #1a2a1a;
+    font-size: 10px;
+    color: #77778a;
+    letter-spacing: 0.5px;
+}
+
+/* ==========================================
+   VULNTRACKER — WEB ASSETS PAGE
+   ========================================== */
+
+.asset-page-header {
+    padding: 28px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #1a1a2e;
+}
+.asset-header-content {
+    min-width: 0;
+    flex: 1 1 320px;
+}
+.asset-page-header h1 {
+    margin: 0 0 8px;
+    color: #00ff41;
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(20px, 3vw, 30px);
+    letter-spacing: 0.1em;
+    text-shadow: 0 0 12px rgba(0, 255, 65, 0.3);
+}
+.asset-page-header p {
+    margin: 0;
+    color: #00ff41;
+    font-size: 13px;
+    line-height: 1.7;
+}
+.asset-page-header .btn { flex-shrink: 0; }
+
+.asset-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    padding: 22px 32px;
+}
+.asset-stats-grid .stat-card {
+    min-width: 0;
+    padding: 20px;
+    border: 1px solid #1a2a1a;
+    border-top: 2px solid #00ff41;
+    background: #0d0d1a;
+}
+.asset-stats-grid .stat-card h2 {
+    margin: 12px 0 8px;
+    color: #00ff41;
+    font-family: 'Orbitron', monospace;
+    font-size: 30px;
+    text-shadow: 0 0 10px rgba(0, 255, 65, 0.35);
+}
+.asset-stats-grid .stat-description {
+    display: block;
+    color: #666;
+    font-size: 12px;
+}
+
+.asset-panel {
+    margin: 8px 32px 28px;
+    padding: 22px;
+    min-width: 0;
+    border: 1px solid #1a2a1a;
+    background: #0d0d1a;
+}
+.asset-panel .section-heading { flex-wrap: wrap; }
+.asset-list { display: grid; gap: 12px; }
+
+.asset-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    min-width: 0;
+    padding: 18px;
+    border: 1px solid #1a2a1a;
+    background: #0a0a0f;
+    transition: border-color 0.2s, background 0.2s;
+}
+.asset-card:hover {
+    border-color: #00ff41;
+    background: rgba(0, 255, 65, 0.025);
+}
+.asset-card .asset-info {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+.asset-card .asset-info h3 {
+    margin: 0 0 8px;
+    color: #00ff41;
+    font-family: 'Orbitron', monospace;
+    font-size: 15px;
+    overflow-wrap: anywhere;
+}
+.asset-card .asset-url {
+    max-width: 100%;
+    margin: 0 0 8px;
+    color: #a0a0a0;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+.asset-card .asset-description {
+    margin: 8px 0;
+    color: #888;
+    font-size: 12px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+.asset-date {
+    display: block;
+    margin-top: 12px;
+    color: #555;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+}
+.asset-status {
+    display: flex;
+    flex: 0 0 auto;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+}
+.asset-status .status-badge { text-align: center; }
+.asset-panel .empty-state { padding: 44px 20px; }
+.asset-panel .empty-state p { overflow-wrap: anywhere; }
+
+/* ==========================================
+   VULNTRACKER — ASSET CREATE FORM
+   ========================================== */
+
+
+
+.asset-form {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    max-width: 680px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-size: 10px;
+    color: #77778a;
+    letter-spacing: 2px;
+    font-family: 'Orbitron', monospace;
+}
+
+.form-group input,
+.form-group textarea {
+    background: #0d0d17;
+    color: #e5e5f0;
+    border: 1px solid #252536;
+    padding: 12px 14px;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 13px;
+    outline: none;
+    resize: vertical;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #00ff41;
+    box-shadow: 0 0 8px rgba(0, 255, 65, 0.15);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #44445a;
+}
+
+.form-group small {
+    font-size: 11px;
+    color: #77778a;
+}
+
+.authorization-notice {
+    padding: 18px;
+    border: 1px solid #ff6600;
+    background: rgba(255, 102, 0, 0.04);
+}
+
+.authorization-notice h3 {
+    font-family: 'Orbitron', monospace;
+    font-size: 10px;
+    color: #ff6600;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+.authorization-notice p {
+    font-size: 12px;
+    color: #9999aa;
+    line-height: 1.7;
+    margin-bottom: 14px;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+    color: #e5e5f0;
+    cursor: pointer;
+    line-height: 1.5;
+}
+
+.checkbox-label input[type="checkbox"] {
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    accent-color: #00ff41;
+    cursor: pointer;
+}
+
+.form-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-top: 6px;
+}
+
+/* Messages (form errors / success) */
+.messages { margin-bottom: 20px; }
+.message {
+    padding: 12px 16px;
+    border: 1px solid;
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+.message.error   { border-color: #ff003c; color: #ff6666; background: rgba(255,0,60,0.06); }
+.message.success { border-color: #00ff41; color: #00ff41; background: rgba(0,255,65,0.06); }
+/* Django default message tags */
+.message.warning { border-color: #ffd700; color: #ffd700; background: rgba(255,215,0,0.06); }
+.message.info    { border-color: #77778a; color: #b0b0c0; background: rgba(119,119,138,0.06); }
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 1024px) {
+    .stats-grid.five-col {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 760px) {
+    nav { padding: 12px 18px; }
+
+    .page-header { padding: 22px 18px 16px; }
+
+    .stats-row { padding: 14px 18px; }
+
+    .section { padding: 16px 18px; }
+
+    .back-link { margin: 0 18px 16px; }
+
+    .filter-form { align-items: stretch; }
+    .filter-form input,
+    .filter-form select,
+    .filter-form .filter-button {
+        flex: 1 1 100%;
+        width: 100%;
+    }
+
+    .vuln-card {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .vuln-title {
+        flex-basis: 100%;
+        order: 3;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+        padding: 18px 16px;
+    }
+    .stats-grid.five-col {
+        grid-template-columns: 1fr;
+    }
+
+    .panel { margin: 12px 16px 22px; padding: 16px; }
+
+    .status-guide { grid-template-columns: 1fr; }
+
+    .assessment-overview { grid-template-columns: 1fr; }
+
+    .asset-page-header { padding: 22px 18px; align-items: flex-start; }
+    .asset-page-header .btn { white-space: normal; }
+    .asset-stats-grid { grid-template-columns: 1fr; padding: 18px; }
+    .asset-panel { margin: 8px 18px 24px; padding: 16px; }
+
+    .asset-card { flex-direction: column; align-items: flex-start; }
+    .asset-status { justify-content: flex-start; }
+
+    .form-actions { flex-direction: column; }
+    .form-actions .btn,
+    .form-actions .btn-secondary { text-align: center; }
+}
+
+@media (max-width: 480px) {
+    .stats-row { flex-direction: column; }
+    .finding-footer { flex-direction: column; }
+}
+
+/* Permanent layout fix for statistics cards */
+
+.stats-grid,
+.asset-stats-grid {
+    display: grid !important;
+    gap: 20px;
+    width: 100%;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.stat-card {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+    .stats-grid,
+    .asset-stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .stats-grid,
+    .asset-stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ==========================================
+   ASSETS AND ASSESSMENTS - DASHBOARD STYLE
+   ========================================== */
+
+/* Keep statistics cards in a horizontal grid */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    width: 100%;
+    margin-bottom: 26px;
+    box-sizing: border-box;
+}
+
+/* Compact cards matching the Dashboard */
+
+.stats-grid .stat-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+    min-height: 120px;
+    padding: 20px;
+    box-sizing: border-box;
+    background: #0a0a0f;
+    border: 1px solid #1a2a1a;
+    border-top: 2px solid #00ff41;
+}
+
+/* Card labels */
+
+.stats-grid .stat-label {
+    display: block;
+    margin-bottom: 12px;
+    color: #77778a;
+    font-size: 11px;
+    letter-spacing: 2px;
+}
+
+/* Card numbers */
+
+.stats-grid .stat-card h2 {
+    margin: 0 0 8px;
+    color: #00ff41;
+    font-family: 'Orbitron', monospace;
+    font-size: 30px;
+    line-height: 1.2;
+}
+
+/* Card descriptions */
+
+.stats-grid .stat-description {
+    display: block;
+    color: #77778a;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* Keep existing severity colours */
+
+.stats-grid .severity-low {
+    color: #00ff41;
+}
+
+.stats-grid .severity-medium {
+    color: #ffd700;
+}
+
+.stats-grid .severity-critical {
+    color: #ff003c;
+}
+
+/* Assets page has three cards */
+
+.asset-stats-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+/* Match section panels to the Dashboard theme */
+
+.asset-panel,
+.panel {
+    box-sizing: border-box;
+    min-width: 0;
+}
+
+/* Make empty states less excessively tall */
+
+.asset-panel .empty-state,
+.panel .empty-state {
+    min-height: 220px;
+    padding: 36px 20px;
+    box-sizing: border-box;
+}
+
+/* Responsive layout */
+
+@media (max-width: 900px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .asset-stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 520px) {
+    .stats-grid,
+    .asset-stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ==========================================
+   ASSETS AND ASSESSMENTS - SPACING POLISH
+   ========================================== */
+
+/* Tighten the space around the statistics sections */
+
+.asset-stats-grid,
+.stats-grid:not(.asset-stats-grid) {
+    margin-bottom: 20px;
+}
+
+/* Keep the Assets panel closer to its statistics */
+
+.asset-panel {
+    margin-top: 0;
+}
+
+/* Make the assessment history section sit closer
+   to the statistics cards */
+
+.stats-grid:not(.asset-stats-grid) + .panel {
+    margin-top: 0;
+}
+
+/* Prevent empty-state content from feeling oversized */
+
+.asset-panel .empty-state,
+.stats-grid:not(.asset-stats-grid) + .panel .empty-state {
+    min-height: 190px;
+    padding: 28px 20px;
+}
+
+/* Keep card contents comfortably spaced */
+
+.stats-grid .stat-card {
+    gap: 4px;
+}
+
+/* Keep narrow screens readable */
+
+@media (max-width: 520px) {
+    .asset-stats-grid,
+    .stats-grid:not(.asset-stats-grid) {
+        margin-bottom: 16px;
+    }
+}
+
+/* ==========================================
+   VULNTRACKER - FINAL VISUAL POLISH
+   ========================================== */
+
+/* Statistics cards */
+
+.stats-grid .stat-card {
+    position: relative;
+    overflow: hidden;
+    background: #0d0d1a;
+    border: 1px solid #1a2a1a;
+    border-top: 2px solid #00ff41;
+    transition: border-color 0.25s ease, transform 0.25s ease,
+                box-shadow 0.25s ease;
+}
+
+.stats-grid .stat-card:hover {
+    transform: translateY(-3px);
+    border-color: #00ff41;
+    box-shadow: 0 0 14px rgba(0, 255, 65, 0.08);
+}
+
+/* Section panels */
+
+.asset-panel,
+.stats-grid:not(.asset-stats-grid) + .panel {
+    background: #0d0d1a;
+    border: 1px solid #1a2a1a;
+}
+
+/* Section headings */
+
+.asset-panel .section-heading,
+.stats-grid:not(.asset-stats-grid) + .panel .section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-bottom: 14px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #00ff41;
+}
+
+.asset-panel .section-heading h2,
+.stats-grid:not(.asset-stats-grid) + .panel .section-heading h2 {
+    margin: 0;
+    color: #00ff41;
+    font-family: 'Orbitron', monospace;
+    font-size: 18px;
+    letter-spacing: 1px;
+}
+
+.asset-panel .section-heading > span,
+.stats-grid:not(.asset-stats-grid) + .panel .section-heading > span {
+    color: #77778a;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+/* Empty-state areas */
+
+.asset-panel .empty-state,
+.stats-grid:not(.asset-stats-grid) + .panel .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: 1px dashed #292940;
+    background: rgba(10, 10, 20, 0.5);
+}
+
+.asset-panel .empty-state h3,
+.stats-grid:not(.asset-stats-grid) + .panel .empty-state h3 {
+    color: #00ff41;
+    letter-spacing: 2px;
+}
+
+.asset-panel .empty-state p,
+.stats-grid:not(.asset-stats-grid) + .panel .empty-state p {
+    max-width: 650px;
+    line-height: 1.8;
+    color: #9292ad;
+}
+
+/* Buttons */
+
+.asset-page-header .btn,
+.asset-panel .btn,
+.stats-grid:not(.asset-stats-grid) + .panel .btn {
+    transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.asset-page-header .btn:hover,
+.asset-panel .btn:hover,
+.stats-grid:not(.asset-stats-grid) + .panel .btn:hover {
+    background: rgba(0, 255, 65, 0.08);
+    box-shadow: 0 0 12px rgba(0, 255, 65, 0.12);
+}
+
+/* Respect reduced-motion preferences */
+
+@media (prefers-reduced-motion: reduce) {
+    .stats-grid .stat-card,
+    .asset-page-header .btn,
+    .asset-panel .btn,
+    .stats-grid:not(.asset-stats-grid) + .panel .btn {
+        transition: none;
+    }
+
+    .stats-grid .stat-card:hover {
+        transform: none;
+    }
+}
+
+/* =====================================================
+   VULNTRACKER - FINAL ASSETS AND ASSESSMENTS POLISH
+   ===================================================== */
+
+
+/* -----------------------------------------------------
+   1. SCAN-LINE LAYERING
+   Keep the cyberpunk effect behind page content.
+   ----------------------------------------------------- */
+
+.scan-line {
+    z-index: 0;
+    pointer-events: none;
+}
+
+nav,
+header,
+main,
+footer,
+.page-header,
+.section,
+.panel,
+.stats-row,
+.stats-grid,
+.asset-panel,
+.asset-list,
+.asset-card,
+.empty-state {
+    position: relative;
+    z-index: 1;
+}
+
+
+/* -----------------------------------------------------
+   2. PAGE HEADERS
+   Consistent spacing and alignment.
+   ----------------------------------------------------- */
+
+.asset-page-header,
+.page-header {
+    box-sizing: border-box;
+}
+
+.asset-page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.asset-header-content {
+    min-width: 0;
+}
+
+.asset-page-header h1,
+.page-header h1 {
+    margin-top: 0;
+}
+
+.asset-page-header p,
+.page-header p {
+    line-height: 1.7;
+}
+
+
+/* -----------------------------------------------------
+   3. STATISTICS GRIDS
+   Three asset cards and four assessment cards.
+   ----------------------------------------------------- */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+    width: 100%;
+    margin: 0 0 24px;
+    box-sizing: border-box;
+}
+
+.asset-stats-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.stats-grid .stat-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 8px;
+    min-width: 0;
+    min-height: 140px;
+    padding: 20px;
+    box-sizing: border-box;
+    background: #0d0d1a;
+    border: 1px solid #1a2a1a;
+    border-top: 2px solid #00ff41;
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        transform 0.25s ease;
+}
+
+.stats-grid .stat-card:hover {
+    border-color: #00ff41;
+    box-shadow: 0 0 14px rgba(0, 255, 65, 0.08);
+    transform: translateY(-2px);
+}
+
+.stats-grid .stat-label {
+    display: block;
+    margin: 0 0 6px;
+    color: #77778a;
+    font-size: 11px;
+    letter-spacing: 2px;
+    line-height: 1.6;
+}
+
+.stats-grid .stat-card h2 {
+    margin: 0;
+    color: #00ff41;
+    font-family: 'Orbitron', monospace;
+    font-size: 30px;
+    line-height: 1.3;
+}
+
+.stats-grid .stat-description {
+    display: block;
+    margin-top: 2px;
+    color: #9292ad;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.stats-grid .severity-low {
+    color: #00ff41;
+}
+
+.stats-grid .severity-medium {
+    color: #ffd700;
+}
+
+.stats-grid .severity-critical {
+    color: #ff003c;
+}
+
+
+/* -----------------------------------------------------
+   4. PANELS AND SECTION HEADINGS
+   ----------------------------------------------------- */
+
+.asset-panel,
+.stats-grid:not(.asset-stats-grid) + .panel {
+    min-width: 0;
+    padding: 24px;
+    margin-top: 0;
+    background: #0d0d1a;
+    border: 1px solid #1a2a1a;
+    box-sizing: border-box;
+}
+
+.asset-panel .section-heading,
+.stats-grid:not(.asset-stats-grid) + .panel .section-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-bottom: 14px;
+    margin: 0 0 20px;
+    border-bottom: 1px solid #00ff41;
+}
+
+.asset-panel .section-heading h2,
+.stats-grid:not(.asset-stats-grid) + .panel .section-heading h2 {
+    margin: 0;
+    color: #00ff41;
+    font-family: 'Orbitron', monospace;
+    font-size: 18px;
+    letter-spacing: 1px;
+    line-height: 1.5;
+}
+
+.asset-panel .section-heading > span,
+.stats-grid:not(.asset-stats-grid) + .panel .section-heading > span {
+    color: #9292ad;
+    font-size: 11px;
+    letter-spacing: 1px;
+}
+
+
+/* -----------------------------------------------------
+   5. REGISTERED ASSET CARDS
+   ----------------------------------------------------- */
+
+.asset-list {
+    display: grid;
+    gap: 14px;
+}
+
+.asset-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    min-width: 0;
+    padding: 20px;
+    background: #0a0a0f;
+    border: 1px solid #25253a;
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+.asset-card:hover {
+    border-color: #00ff41;
+    background: #0c0c14;
+}
+
+.asset-card .asset-info {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.asset-card .asset-info h3 {
+    margin: 0 0 8px;
+    color: #00ff41;
+    font-size: 16px;
+}
+
+.asset-card .asset-url {
+    overflow-wrap: anywhere;
+    color: #9292ad;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+.asset-card .asset-description {
+    color: #b0b0c4;
+    line-height: 1.7;
+}
+
+.asset-card .asset-date {
+    display: block;
+    margin-top: 12px;
+    color: #77778a;
+    font-size: 10px;
+    letter-spacing: 1px;
+}
+
+.asset-card .asset-status {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+
+/* -----------------------------------------------------
+   6. STATUS BADGES
+   Preserve the existing status meanings and colours.
+   ----------------------------------------------------- */
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    padding: 5px 9px;
+    border: 1px solid #34344a;
+    background: #0a0a0f;
+    color: #9292ad;
+    font-size: 10px;
+    letter-spacing: 1px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.status-badge.patched {
+    border-color: #006621;
+    color: #00ff41;
+}
+
+.status-badge.in_progress {
+    border-color: #8a7100;
+    color: #ffd700;
+}
+
+.status-badge.open {
+    border-color: #8a1230;
+    color: #ff003c;
+}
+
+
+/* -----------------------------------------------------
+   7. EMPTY STATES
+   Compact, centered, and readable.
+   ----------------------------------------------------- */
+
+.asset-panel .empty-state,
+.stats-grid:not(.asset-stats-grid) + .panel .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 210px;
+    padding: 32px 20px;
+    box-sizing: border-box;
+    text-align: center;
+    border: 1px dashed #292940;
+    background: rgba(10, 10, 20, 0.65);
+}
+
+.empty-state .empty-icon {
+    margin-bottom: 12px;
+    color: #00ff41;
+    font-size: 32px;
+}
+
+.empty-state h3 {
+    margin: 0 0 12px;
+    color: #00ff41;
+    letter-spacing: 2px;
+    line-height: 1.6;
+}
+
+.empty-state p {
+    max-width: 650px;
+    margin: 0 0 20px;
+    color: #9292ad;
+    line-height: 1.8;
+}
+
+
+/* -----------------------------------------------------
+   8. ASSESSMENT HISTORY TABLE
+   ----------------------------------------------------- */
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table th {
+    padding: 13px 14px;
+    color: #00ff41;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-align: left;
+    border-bottom: 1px solid #25253a;
+}
+
+.data-table td {
+    padding: 15px 14px;
+    color: #b0b0c4;
+    border-bottom: 1px solid #1a1a2e;
+    vertical-align: middle;
+}
+
+.data-table tbody tr:hover {
+    background: rgba(0, 255, 65, 0.025);
+}
+
+.data-table .asset-url {
+    display: block;
+    max-width: 260px;
+    margin-top: 5px;
+    overflow-wrap: anywhere;
+    color: #77778a;
+    font-size: 11px;
+}
+
+.action-link {
+    color: #00ff41;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.action-link:hover {
+    text-shadow: 0 0 8px rgba(0, 255, 65, 0.5);
+}
+
+
+/* -----------------------------------------------------
+   9. ASSESSMENT STATUS GUIDE
+   ----------------------------------------------------- */
+
+.assessment-note {
+    margin-top: 24px;
+}
+
+.status-guide {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.status-guide > div {
+    min-width: 0;
+    padding: 16px;
+    background: #0a0a0f;
+    border: 1px solid #25253a;
+}
+
+.status-guide p {
+    margin: 12px 0 0;
+    color: #9292ad;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+
+/* -----------------------------------------------------
+   10. BUTTON INTERACTIONS
+   ----------------------------------------------------- */
+
+.asset-page-header .btn,
+.asset-panel .btn,
+.stats-grid:not(.asset-stats-grid) + .panel .btn {
+    transition:
+        background 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.asset-page-header .btn:hover,
+.asset-panel .btn:hover,
+.stats-grid:not(.asset-stats-grid) + .panel .btn:hover {
+    background: rgba(0, 255, 65, 0.07);
+    border-color: #00ff41;
+    box-shadow: 0 0 12px rgba(0, 255, 65, 0.1);
+}
+
+
+/* -----------------------------------------------------
+   11. RESPONSIVE LAYOUTS
+   ----------------------------------------------------- */
+
+@media (max-width: 1000px) {
+    .stats-grid,
+    .asset-stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .status-guide {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 650px) {
+    .asset-page-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .stats-grid,
+    .asset-stats-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .stats-grid .stat-card {
+        min-height: 120px;
+    }
+
+    .asset-panel,
+    .stats-grid:not(.asset-stats-grid) + .panel {
+        padding: 16px;
+    }
+
+    .asset-card {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .asset-card .asset-status {
+        justify-content: flex-start;
+    }
+
+    .status-guide {
+        grid-template-columns: 1fr;
+    }
+
+    .asset-panel .section-heading h2,
+    .stats-grid:not(.asset-stats-grid) + .panel .section-heading h2 {
+        font-size: 15px;
+    }
+}
+
+
+/* -----------------------------------------------------
+   12. ACCESSIBILITY
+   ----------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+    .stats-grid .stat-card,
+    .asset-card,
+    .asset-page-header .btn,
+    .asset-panel .btn,
+    .stats-grid:not(.asset-stats-grid) + .panel .btn {
+        transition: none;
+    }
+
+    .stats-grid .stat-card:hover {
+        transform: none;
+    }
+}
+
+/* ==========================================
+   VULNTRACKER - TYPOGRAPHY CONSISTENCY
+   Assets and Assessments only
+   ========================================== */
+
+/* Page headings */
+
+.asset-page-header h1,
+.page-header h1 {
+    font-family: 'Orbitron', monospace;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    line-height: 1.4;
+}
+
+/* Page subtitles */
+
+.asset-page-header p,
+.page-header p {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    line-height: 1.6;
+}
+
+/* Statistics labels */
+
+.stats-grid .stat-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* Statistics numbers */
+
+.stats-grid .stat-card h2 {
+    font-family: 'Orbitron', monospace;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+/* Statistics descriptions */
+
+.stats-grid .stat-description {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.3px;
+    line-height: 1.6;
+}
+
+/* Section headings */
+
+.asset-panel .section-heading h2,
+.stats-grid:not(.asset-stats-grid) + .panel .section-heading h2 {
+    font-family: 'Orbitron', monospace;
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    line-height: 1.5;
+}
+
+/* Empty-state headings */
+
+.asset-panel .empty-state h3,
+.stats-grid:not(.asset-stats-grid) + .panel .empty-state h3 {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+/* Empty-state descriptions */
+
+.asset-panel .empty-state p,
+.stats-grid:not(.asset-stats-grid) + .panel .empty-state p {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 14px;
+    letter-spacing: 0.2px;
+    line-height: 1.8;
+}
+
+/* Buttons */
+
+.asset-page-header .btn,
+.asset-panel .btn,
+.stats-grid:not(.asset-stats-grid) + .panel .btn {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+/* ==========================================
+   CONSISTENT VULNTRACKER PAGE HEADINGS
+   ========================================== */
+
+.asset-page-header h1,
+.page-header h1 {
+    font-family: 'Orbitron', monospace;
+    font-size: 20px;
+    font-weight: 400;
+    color: #00ff41;
+    letter-spacing: 0.1em;
+    line-height: 1.5;
+    text-shadow: 0 0 15px #00ff41;
+    text-transform: uppercase;
+}
+
+
+.asset-page-header p,
+.page-header p {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 11px;
+    font-weight: 400;
+    color: #006621;
+    letter-spacing: 0.15em;
+    line-height: 1.7;
+    text-shadow: none;
+}

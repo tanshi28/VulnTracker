@@ -1,0 +1,69 @@
+{% extends 'vulnerabilities/base.html' %}
+{% block title %}{{ vuln.cve_id }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-title">// {{ vuln.cve_id }}</div>
+  <div class="page-sub">{{ vuln.title }}</div>
+</div>
+
+<a href="{% url 'vuln-list' %}" class="back-link">← BACK TO ALL CVEs</a>
+
+<div class="detail-grid">
+  <div>
+    <div class="detail-card" style="margin-bottom:16px">
+      <h3>DESCRIPTION</h3>
+      <p>{{ vuln.description }}</p>
+    </div>
+
+    <div class="detail-card">
+      <h3>REMEDIATION</h3>
+      <p>{{ vuln.remediation }}</p>
+    </div>
+  </div>
+
+  <div class="detail-card">
+    <h3>CVE METADATA</h3>
+
+    <div class="detail-meta-row">
+      <span class="meta-label">CVE ID</span>
+      <span class="meta-value">{{ vuln.cve_id }}</span>
+    </div>
+
+    <div class="detail-meta-row">
+      <span class="meta-label">SEVERITY</span>
+      <span class="sev-badge {% if vuln.severity == 'C' %}critical{% elif vuln.severity == 'H' %}high{% elif vuln.severity == 'M' %}medium{% elif vuln.severity == 'L' %}low{% endif %}">
+        {{ vuln.get_severity_display }}
+      </span>
+    </div>
+
+    <div class="detail-meta-row">
+      <span class="meta-label">STATUS</span>
+      <span class="status-badge {% if vuln.status == 'O' %}open{% elif vuln.status == 'IP' %}in_progress{% elif vuln.status == 'P' %}patched{% endif %}">
+        {{ vuln.get_status_display }}
+      </span>
+    </div>
+
+    <div class="detail-meta-row">
+      <span class="meta-label">SYSTEM</span>
+      <a href="{% url 'system-detail' vuln.affected_system.slug %}" class="meta-value">
+        {{ vuln.affected_system.name }}
+      </a>
+    </div>
+
+    <div class="detail-meta-row">
+      <span class="meta-label">DISCOVERED</span>
+      <span class="meta-value">{{ vuln.discovered|date:"Y-m-d" }}</span>
+    </div>
+
+    {% if vuln.threat_actor %}
+    <div class="detail-meta-row">
+      <span class="meta-label">THREAT ACTOR</span>
+      <a href="{% url 'actor-detail' vuln.threat_actor.slug %}" class="meta-value">
+        {{ vuln.threat_actor.name }}
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

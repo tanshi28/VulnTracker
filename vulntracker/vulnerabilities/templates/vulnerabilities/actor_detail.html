@@ -1,0 +1,40 @@
+{% extends 'vulnerabilities/base.html' %}
+{% block title %}{{ actor.name }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div class="page-title">// THREAT ACTOR: {{ actor.name }}</div>
+  <div class="page-sub">ORIGIN: {{ actor.origin }} // {{ vulns|length }} LINKED CVEs</div>
+</div>
+
+<a href="{% url 'home' %}" class="back-link">← BACK TO HOME</a>
+
+<div class="section">
+  <div class="detail-card" style="margin-bottom:20px">
+    <h3>ACTOR PROFILE</h3>
+    <p>{{ actor.description }}</p>
+  </div>
+
+  <div class="section-title">LINKED VULNERABILITIES</div>
+
+  {% for vuln in vulns %}
+  <a href="{% url 'vuln-detail' vuln.slug %}" class="vuln-card">
+
+    <span class="sev-badge {% if vuln.severity == 'C' %}critical{% elif vuln.severity == 'H' %}high{% elif vuln.severity == 'M' %}medium{% elif vuln.severity == 'L' %}low{% endif %}">
+      {{ vuln.get_severity_display }}
+    </span>
+
+    <span class="vuln-cve">{{ vuln.cve_id }}</span>
+
+    <span class="vuln-title">{{ vuln.title }}</span>
+
+    <span class="status-badge {% if vuln.status == 'O' %}open{% elif vuln.status == 'IP' %}in_progress{% elif vuln.status == 'P' %}patched{% endif %}">
+      {{ vuln.get_status_display }}
+    </span>
+
+  </a>
+  {% empty %}
+  <p class="empty">// NO LINKED CVEs FOR THIS ACTOR</p>
+  {% endfor %}
+</div>
+{% endblock %}
